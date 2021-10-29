@@ -33,6 +33,22 @@ async function run() {
             const packages = await cursor.toArray();
             res.json(packages);
         })
+
+
+        // Use POST to get data by keys
+        app.post('/packages/byKey', async (req, res) => {
+            const keys = req.body;
+            const query = { key: { $in: keys } }
+            const packages = await packagesCollection.find(query).toArray();
+            res.json(packages);
+        });
+
+        // Add Orders API
+        app.post('/order', async (req, res) => {
+            const order = req.body;
+            const result = await orderCollection.insertOne(order);
+            res.json(result);
+        })
     }
     finally {
         // await client.close();
