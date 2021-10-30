@@ -1,5 +1,6 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
+const ObjectId = require("mongodb").ObjectId;
 require('dotenv').config();
 const cors = require('cors');
 
@@ -34,6 +35,12 @@ async function run() {
             res.json(packages);
         })
 
+        //GET ALL ORDER
+        app.get('/allOrder', async (req, res) => {
+            const cursor = orderCollection.find({});
+            const allOrder = await cursor.toArray();
+            res.json(allOrder);
+        })
 
         // Use POST to get data by keys
         app.post('/packages/byKey', async (req, res) => {
@@ -48,6 +55,43 @@ async function run() {
             const order = req.body;
             const result = await orderCollection.insertOne(order);
             res.json(result);
+        })
+
+        // add Package
+        app.post("/addPackage", async (req, res) => {
+            const addPackage = req.body;
+            const result = await packagesCollection.insertOne(addPackage);
+            console.log(result);
+            res.json(result);
+        });
+
+
+        // delete package
+
+        app.delete("/deletePackage/:id", async (req, res) => {
+            // console.log(req.params.id);
+            const result = await orderCollection.deleteOne({
+                _id: ObjectId(req.params.id),
+            });
+            res.json(result);
+        });
+
+
+        //UPDATE API
+        app.put("/updateStatus/:id", async (req, res) => {
+            const id = req.params.id;
+            const updatedStatus = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: updatedStatus.status
+                },
+            };
+            const result = await orderCollection.updateOne(filter, updateDoc, options);
+            // console.log('updated', id,req);
+            res.json(result);
+
         })
     }
     finally {
