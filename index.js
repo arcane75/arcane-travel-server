@@ -15,7 +15,7 @@ app.use(express.json());
 
 // const uri = 'mongodb+srv://arcanetravel:TxwteBG01k4ezzom@cluster0.swu9d.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
-const uri = "mongodb+srv://arcanetravel:TxwteBG01k4ezzom@cluster0.aneek.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.aneek.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -93,6 +93,15 @@ async function run() {
             res.json(result);
 
         })
+
+        // my order
+
+        app.get("/myOrder/:email", async (req, res) => {
+            const result = await orderCollection.find({
+                email: req.params.email,
+            }).toArray();
+            res.json(result);
+        });
     }
     finally {
         // await client.close();
