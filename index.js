@@ -42,7 +42,7 @@ async function run() {
             const reviews = await cursor.toArray();
             res.json(reviews);
         })
-        
+
         //GET ALL ORDER
         app.get('/allOrder', async (req, res) => {
             const cursor = orderCollection.find({});
@@ -86,19 +86,21 @@ async function run() {
 
 
         //UPDATE API
-        app.put("/updateStatus/:id", async (req, res) => {
+        app.put("/allOrder/:id", async (req, res) => {
             const id = req.params.id;
-            const updatedStatus = req.body;
-            const filter = { _id: ObjectId(id) };
-            const options = { upsert: true };
-            const updateDoc = {
-                $set: {
-                    status: updatedStatus.status
-                },
-            };
-            const result = await orderCollection.updateOne(filter, updateDoc, options);
-            // console.log('updated', id,req);
-            res.json(result);
+            console.log("updated", id);
+            res.send('updating');
+            // const updatedStatus = req.body;
+            // const filter = { _id: ObjectId(id) };
+            // const options = { upsert: true };
+            // const updateDoc = {
+            //     $set: {
+            //         status: updatedStatus.status
+            //     },
+            // };
+            // const result = await orderCollection.updateOne(filter, updateDoc, options);
+            // // console.log('updated', id,req);
+            // res.json(result);
 
         })
 
