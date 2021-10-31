@@ -27,14 +27,22 @@ async function run() {
         const database = client.db('arcane-travel');
         const packagesCollection = database.collection('packages');
         const orderCollection = database.collection('order');
+        const reviewCollection = database.collection('reviews');
 
-        //GET API
+        //GET packages
         app.get('/packages', async (req, res) => {
             const cursor = packagesCollection.find({});
             const packages = await cursor.toArray();
             res.json(packages);
         })
 
+        //GET reviews
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewCollection.find({});
+            const reviews = await cursor.toArray();
+            res.json(reviews);
+        })
+        
         //GET ALL ORDER
         app.get('/allOrder', async (req, res) => {
             const cursor = orderCollection.find({});
